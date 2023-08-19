@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Binance.Net.Enums;
+using Binance.Net.Objects;
 using Binance.Net.Objects.Spot.WalletData;
 using CryptoExchange.Net.Objects;
 
@@ -19,7 +20,7 @@ namespace Binance.Net.Interfaces.SubClients
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Asset detail</returns>
-        Task<WebCallResult<Dictionary<string, BinanceAssetDetails>>> GetAssetDetailsAsync(int? receiveWindow = null, CancellationToken ct = default);
+        Task<WebCallResult<BinanceDetailRecords<BinanceAssetDetails>>> GetAssetDetailsAsync(int? receiveWindow = null, CancellationToken ct = default);
 
         /// <summary>
         /// Withdraw assets from Binance to an address

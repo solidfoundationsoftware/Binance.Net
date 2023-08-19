@@ -6970,6 +6970,22 @@
             The data of stream
             </summary>
         </member>
+        <member name="T:Binance.Net.Objects.BinanceDetailRecords`1">
+            <summary>
+            Query results
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Binance.Net.Objects.BinanceDetailRecords`1.AssetDetail">
+            <summary>
+            The list records
+            </summary>
+        </member>
+        <member name="P:Binance.Net.Objects.BinanceDetailRecords`1.Success">
+            <summary>
+            Response status.
+            </summary>
+        </member>
         <member name="T:Binance.Net.Objects.BinanceOrderBookEntry">
             <summary>
             An entry in the order book

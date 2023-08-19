@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Binance.Net.Converters;
 using Binance.Net.Enums;
 using Binance.Net.Interfaces.SubClients;
+using Binance.Net.Objects;
 using Binance.Net.Objects.Spot.WalletData;
 using CryptoExchange.Net;
 using CryptoExchange.Net.Objects;
@@ -19,7 +20,7 @@ namespace Binance.Net.SubClients
     /// </summary>
     public class BinanceClientWithdrawDeposit : IBinanceClientWithdrawDeposit
     {
-        private const string assetDetailsEndpoint = "asset/assetDetail";
+        private const string assetDetailsEndpoint = "";// "asset/assetDetail";
         private const string withdrawEndpoint = "capital/withdraw/apply";
         private const string withdrawHistoryEndpoint = "capital/withdraw/history";
         private const string depositHistoryEndpoint = "capital/deposit/hisrec";
@@ -39,11 +40,11 @@ namespace Binance.Net.SubClients
         /// <param name="receiveWindow">The receive window for which this request is active. When the request takes longer than this to complete the server will reject the request</param>
         /// <param name="ct">Cancellation token</param>
         /// <returns>Asset detail</returns>
-        public async Task<WebCallResult<Dictionary<string, BinanceAssetDetails>>> GetAssetDetailsAsync(int? receiveWindow = null, CancellationToken ct = default)
+        public async Task<WebCallResult<BinanceDetailRecords<BinanceAssetDetails>>> GetAssetDetailsAsync(int? receiveWindow = null, CancellationToken ct = default)
         {
             var timestampResult = await _baseClient.CheckAutoTimestamp(ct).ConfigureAwait(false);
             if (!timestampResult)
-                return new WebCallResult<Dictionary<string, BinanceAssetDetails>>(timestampResult.ResponseStatusCode, timestampResult.ResponseHeaders, null, timestampResult.Error);
+                return new WebCallResult<BinanceDetailRecords<BinanceAssetDetails>>(timestampResult.ResponseStatusCode, timestampResult.ResponseHeaders, null, timestampResult.Error);
 
             var parameters = new Dictionary<string, object>
             {
@@ -51,7 +52,10 @@ namespace Binance.Net.SubClients
             };
             parameters.AddOptionalParameter("recvWindow", receiveWindow?.ToString(CultureInfo.InvariantCulture) ?? _baseClient.DefaultReceiveWindow.TotalMilliseconds.ToString(CultureInfo.InvariantCulture));
 
-            var result = await _baseClient.SendRequestInternal<Dictionary<string, BinanceAssetDetails>>(_baseClient.GetUrlSpot(assetDetailsEndpoint, "sapi", "1"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            var assetDetailsURL = new Uri("https://api.binance.us/wapi/v3/assetDetail.html");
+
+            var result = await _baseClient.SendRequestInternal<BinanceDetailRecords<BinanceAssetDetails>>(assetDetailsURL, HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
+            //var result = await _baseClient.SendRequestInternal<Dictionary<string, BinanceAssetDetails>>(_baseClient.GetUrlSpot(assetDetailsEndpoint, "wapi", "3"), HttpMethod.Get, ct, parameters, true).ConfigureAwait(false);
             return result;
         }
         #endregion
